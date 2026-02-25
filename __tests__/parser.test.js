@@ -111,6 +111,7 @@ describe('Parser Tests', () => {
       expect(() => parse("+ 3")).toThrow();
       expect(() => parse("3 + + 4")).toThrow();
       expect(() => parse("3.5")).toThrow(); // Only integers are supported
+      expect(() => parse("@")).toThrow(); // invalid char
     });
 
     test('should handle incomplete expressions', () => {
@@ -125,6 +126,23 @@ describe('Parser Tests', () => {
       expect(parse("1 - 2")).toBe(-1);
       expect(parse("10 - 4 - 3")).toBe(3);
       expect(parse("7 - 5 - 1")).toBe(1);
+    });
+  });
+
+  // Additional tests added to cover more specific scenarios
+  describe('Lexer extensions: floating point + // comments', () => {
+    test('should parse floating point numbers', () => {
+      expect(parse("2.35")).toBe(2.35);
+      expect(parse("23")).toBe(23);
+      expect(parse("2.35e-3")).toBeCloseTo(0.00235);
+      expect(parse("2.35e+3")).toBeCloseTo(2350);
+      expect(parse("2.35E-3")).toBeCloseTo(0.00235);
+    });
+    
+    test('should ignore // comments until end of line', () => {
+      expect(parse("1 + 2 // hola")).toBe(3);
+      expect(parse("1//c\n+2")).toBe(3);
+      expect(parse("2 ** 3 // pow")).toBe(8);
     });
   });
 
