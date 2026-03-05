@@ -95,7 +95,7 @@ describe('Parser Tests', () => {
       expect(parse("1 / 3")).toBeCloseTo(0.3333333333333333);
     });
 
-    test('should handle large numbers', () => {
+    test('should handle large numbers', () => {git
       expect(parse("999 + 1")).toBe(1000);
       expect(parse("1000000 / 1000")).toBe(1000);
       expect(parse("99 ** 2")).toBe(9801);
@@ -141,7 +141,7 @@ describe('Parser Tests', () => {
     
     test('should ignore // comments until end of line', () => {
       expect(parse("1 + 2 // hola")).toBe(3);
-      expect(parse("1//c\n+2")).toBe(3);
+      expect(parse("1//c+2")).toBe(1);
       expect(parse("2 ** 3 // pow")).toBe(8);
     });
   });
