@@ -43,7 +43,6 @@ t
   | r                     { $$ = $1; }
   ;
 
-/* power level: right associative */
 r
   : f opow r              { $$ = /* $1 ** $3 */; }
   | f                     { $$ = $1; }
