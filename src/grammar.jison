@@ -8,9 +8,9 @@
 ([0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?)    return 'NUMBER';
 
 /* operators grouped by precedence */
-"**"                      return 'opow';
-"*"|"/"                   return 'opmu';
-"+"|"-"                   return 'opad';
+"**"        { yytext = "**"; return 'opow'; }
+"*"|"/"     { return 'opmu'; }   /* yytext será "*" o "/" */
+"+"|"-"     { return 'opad'; }   /* yytext será "+" o "-" */
 
 /* parentheses */
 "("                       return '(';
@@ -33,19 +33,16 @@ expressions
   : e EOF                 { return $1; }
   ;
 
-e
-  : e opad t              { $$ = /* $1 (+|-) $3 */; }
-  | t                     { $$ = $1; }
+e : e opad t   { $$ = operate($2, $1, $3); }
+  | t          { $$ = $1; }
   ;
 
-t
-  : t opmu r              { $$ = /* $1 (*|/) $3 */; }
-  | r                     { $$ = $1; }
+t : t opmu r   { $$ = operate($2, $1, $3); }
+  | r          { $$ = $1; }
   ;
 
-r
-  : f opow r              { $$ = /* $1 ** $3 */; }
-  | f                     { $$ = $1; }
+r : f opow r   { $$ = operate($2, $1, $3); }
+  | f          { $$ = $1; }
   ;
 
 f
